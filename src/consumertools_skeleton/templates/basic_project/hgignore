@@ -1,0 +1,12 @@
+# use glob syntax.
+syntax: glob
+
+*.pyc
+*.pyo
+
+*.db
+
+env
+
+local_settings.py
+dev_requirements.txt

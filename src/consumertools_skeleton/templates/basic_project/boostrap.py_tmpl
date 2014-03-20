@@ -1,0 +1,39 @@
+import sys
+import os
+from subprocess import call
+
+VIRTUALENV_DIRECTORY = os.path.join('env', '${project}')
+if sys.platform == 'win32':
+    BIN_DIRECTORY = os.path.join(VIRTUALENV_DIRECTORY, 'Scripts')
+else:
+    BIN_DIRECTORY = os.path.join(VIRTUALENV_DIRECTORY, 'bin')
+ 
+
+def is_inside_virtualenv():
+    if hasattr(sys, 'real_prefix'):
+        return True
+    else:
+        return False
+
+
+def create_virtualenv():
+    call("virtualenv %s" % (VIRTUALENV_DIRECTORY), shell=True)
+
+
+def install_requirements(r="requirements.txt"):
+    call("%s install -r %s" % (os.path.join(BIN_DIRECTORY, 'pip'), r), shell=True)
+   
+ 
+if __name__ == "__main__":
+    if is_inside_virtualenv():
+        exit("You have to be outside a virtual environment to run this script")
+    print "Creating Virtual environment"    
+    create_virtualenv()
+    print "Installing project requirements"
+    install_requirements()
+    
+    #Dev mode
+    if (len(sys.argv) > 1 and sys.argv[1] == 'dev'):
+        print "Installing dev requirements"
+        install_requirements(r="dev_requirements.txt")
+    
